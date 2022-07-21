@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user-model");
 const ApiError = require("../error/apiError");
+const jwt = require("jsonwebtoken");
 class UserController {
     async createUser(req, res, next) {
         try {
@@ -14,6 +15,27 @@ class UserController {
                 password: hashPassword,
             });
             return res.json(user);
+        } catch (err) {
+            next(err);
+        }
+    }
+    async login(req, res, next) {
+        try {
+            const { email, password } = req.body;
+            const user = await User.findOne({ where: { email } });
+            if (!user) {
+                throw ApiError.badRequest(`User not found`);
+            }
+            const comparePassword = bcrypt.compareSync(password, user.password);
+            if (!comparePassword) {
+                throw ApiError.badRequest(`Incorrect password`);
+            }
+            const token = jwt.sign(
+                { id: user.id, email },
+                process.env.SECRET_KEY,
+                { expiresIn: "24h" }
+            );
+            return res.json({ token });
         } catch (err) {
             next(err);
         }

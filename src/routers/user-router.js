@@ -9,7 +9,7 @@ router.post(
     userController.createUser
 );
 router.get("/users/:id", userController.getUser);
-router.post("/login");
+router.post("/login", userController.login);
 router.put(
     "/users/:id",
     validationMiddleware.validateUserUpdates,
