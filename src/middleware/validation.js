@@ -14,7 +14,7 @@ class validationHelper {
         }
     }
     validateLastName(last_name, isUpdated) {
-        if (isUpdated && !last_name) {
+        if (isUpdated || !last_name) {
             return;
         }
         if (!validator.isAlpha(last_name)) {
@@ -22,7 +22,7 @@ class validationHelper {
         }
     }
     validatePhoneNumber(phone, isUpdated) {
-        if (isUpdated && !phone) {
+        if (isUpdated || !phone) {
             return;
         }
         let regexp =
